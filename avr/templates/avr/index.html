@@ -1,0 +1,387 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <base target="_self">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'avr/avr.css' %}">
+</head>
+
+<body>
+<div class="container">
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <h4>Выбор контроллера АВР</h4>
+        </div>
+    </div>
+
+    <div class="row row_margin">
+        <div class="col-12 col-lg-6">
+            <h5>1. Выбрать тип АВР</h5>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <label for="avr_scheme">Схема АВР</label>
+            <select id="avr_scheme" class="form-control border border-warning">
+                <option disabled selected>Выберите схему АВР</option>
+                <option>2.0</option>
+                <option>2.1</option>
+                <option>3.0</option>
+                <option>3.1</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <label for="power_unit">Силовая часть</label>
+            <select id="power_unit" class="form-control border border-warning">
+                <option value="" disabled selected>Выберите тип силовых аппаратов</option>
+                <option>автоматические выключатели</option>
+                <option>контакторы</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <label for="plc_supply_voltage">Напряжение питания ПЛК</label>
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alert220V" hidden>
+                Для питающего напряжения отличного от 220 VAC АВР программируются по запросу
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <select id="plc_supply_voltage" class="form-control border border-success">
+                <option disabled selected>Выберите напряжение питания</option>
+                <option selected>220 VAC</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row row_margin">
+        <div class="col-12 col-lg-6">
+            <h5>2. Выбрать тип силовых аппаратов</h5>
+        </div>
+    </div>
+
+    <div class="row" id="alertViborDoctupen">
+        <div class="col-12 col-lg-6">
+            <div class="alert alert-primary" role="alert">
+                Выбор силовых аппаратов станет доступен после выбора типа АВР
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="alertViborProizvoditela" hidden>
+        <div class="col-12 col-lg-6">
+            <div class="alert alert-success" role="alert">
+                Выберите производителя и серию силовых аппаратов
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="alertViborNaKontaktorah" hidden>
+        <div class="col-12 col-lg-6">
+            <div class="alert alert-success" role="alert">
+                Для схем на контакторах производитель и тип силовых аппаратов не важен. Нажмите кнопку Выбрать
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <label for="manufacturer">Производитель</label>
+            <div id="loading-manufacturer" class="spinner-border spinner-border-sm text-warning" role="status"
+                 hidden>
+                <span class="sr-only">Loading...</span>
+            </div>
+            <select id="manufacturer" class="form-control border" disabled>
+                <option disabled selected>Выберите производителя</option>
+
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-6">
+            <label for="type_device">Серия</label>
+            <div id="loading-typedevice" class="spinner-border spinner-border-sm text-warning" role="status" hidden>
+                <span class="sr-only">Loading...</span>
+            </div>
+            <select id="type_device" class="form-control border" disabled>
+                <option disabled selected>Выберите серию</option>
+
+            </select>
+        </div>
+    </div>
+
+    <div class="row row_margin">
+        <div class="col-12 col-lg-6">
+            <a href="<?= ScriptApp.getService().getUrl(); ?>?v=res" id="btn_choose"
+               class="btn btn-primary btn-lg disabled" tabindex="-1" role="button" aria-disabled="true">Выбрать</a>
+            <div id="loading-btnchoose" class="spinner-border spinner-border-sm text-warning" role="status" hidden>
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+</script>
+
+<script>
+	$(document).ready(function () {
+
+      var enteredInfo = {};
+      var btnhref = document.getElementById("btn_choose").href;
+
+      document.getElementById("avr_scheme").addEventListener("change", afterChooseAvrScheme);
+      document.getElementById("avr_scheme").addEventListener("change", afterChooseAllInTypeAVR);
+      document.getElementById("power_unit").addEventListener("change", afterChoosePowerUnit);
+      document.getElementById("power_unit").addEventListener("change", afterChooseAllInTypeAVR);
+      document.getElementById("plc_supply_voltage").addEventListener("change", afterChooseAllInTypeAVR);
+
+      function afterChooseAvrScheme() {
+         if (document.getElementById("avr_scheme").value != "")
+            setBorder("avr_scheme", "border-success");
+      }
+
+      function afterChoosePowerUnit() {
+         if (document.getElementById("power_unit").value != "")
+            setBorder("power_unit", "border-success");
+      }
+
+      function setBorder(elementId, addBorder) {
+         document.getElementById(elementId).classList.remove("border");
+         document.getElementById(elementId).classList.remove("border-warning");
+         document.getElementById(elementId).classList.remove("border-success");
+         document.getElementById(elementId).classList.add("border");
+         document.getElementById(elementId).classList.add(addBorder);
+      }
+
+      function delBorder(elementId) {
+         document.getElementById(elementId).classList.remove("border");
+         document.getElementById(elementId).classList.remove("border-warning");
+         document.getElementById(elementId).classList.remove("border-success");
+      }
+
+      function afterChooseAllInTypeAVR() {
+         $('#manufacturer option:not(:first)').remove();
+         $('#type_device option:not(:first)').remove();
+         document.getElementById("manufacturer")[0].selected = true;
+         document.getElementById("type_device")[0].selected = true;
+
+         document.getElementById("manufacturer").disabled = true;
+         document.getElementById("type_device").disabled = true;
+         document.getElementById("btn_choose").classList.add("disabled");
+         document.getElementById("alertViborProizvoditela").hidden = true;
+         document.getElementById("alertViborNaKontaktorah").hidden = true;
+
+         setEnteredInfo();
+
+         if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '') {
+            if (enteredInfo.powerUnit == "контакторы") {
+               let newOption = new Option("не важно");
+               document.getElementById("manufacturer").add(newOption);
+               newOption = new Option("не важно");
+               document.getElementById("type_device").add(newOption);
+               document.getElementById("manufacturer")[1].selected = true;
+               document.getElementById("type_device")[1].selected = true;
+
+               document.getElementById("alertViborDoctupen").hidden = true;
+               document.getElementById("alertViborNaKontaktorah").hidden = false;
+               document.getElementById("alertViborProizvoditela").hidden = true;
+
+               document.getElementById("manufacturer").disabled = true;
+
+               setBorder("manufacturer", "border-success");
+               setBorder("type_device", "border-success");
+
+               afterChooseTypeDevice();
+            }
+            else {
+               document.getElementById("alertViborNaKontaktorah").hidden = true;
+               document.getElementById("alertViborDoctupen").hidden = false;
+
+               document.getElementById("type_device").disabled = true;
+               delBorder("manufacturer");
+               delBorder("type_device");
+
+               var saveInfo = saveEnteredInfo();
+               google.script.run.withSuccessHandler(getListBrands).returnListBrands(enteredInfo);
+
+               document.getElementById("loading-manufacturer").hidden = false;
+
+               function getListBrands(listBrands) {
+                  if (compareEnteredInfo(saveInfo)) {
+                     for (var i = 0; i < listBrands.length; i++) {
+                        let newOption = new Option(listBrands[i]);
+                        document.getElementById("manufacturer").add(newOption);
+                     }
+
+                     setBorder("manufacturer", "border-warning");
+                     document.getElementById("manufacturer").disabled = false;
+                     document.getElementById("alertViborDoctupen").hidden = true;
+                     document.getElementById("alertViborProizvoditela").hidden = false;
+                  }
+
+                  document.getElementById("loading-manufacturer").hidden = true;
+               }
+            }
+         }
+      }
+
+      document.getElementById("manufacturer").addEventListener("change", afterChooseManufacturer);
+
+      function afterChooseManufacturer() {
+         if (document.getElementById("manufacturer").value != "")
+            setBorder("manufacturer", "border-success");
+
+         document.getElementById("type_device").disabled = true;
+         delBorder("type_device");
+         $('#type_device option:not(:first)').remove();
+         document.getElementById("type_device")[0].selected = true;
+         document.getElementById("btn_choose").classList.add("disabled");
+
+         setEnteredInfo();
+
+         if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '' && enteredInfo.manufacturer != '') {
+            if (enteredInfo.manufacturer != "не важно") {
+               var saveInfo = saveEnteredInfo();
+               google.script.run.withSuccessHandler(getListTypes).returnListTypes(enteredInfo);
+
+               document.getElementById("loading-typedevice").hidden = false;
+
+               function getListTypes(listTypes) {
+                  if (compareEnteredInfo(saveInfo)) {
+                     for (var i = 0; i < listTypes.length; i++) {
+                        let newOption = new Option(listTypes[i]);
+                        document.getElementById("type_device").add(newOption);
+                     }
+
+                     document.getElementById("type_device").disabled = false;
+                     setBorder("type_device", "border-warning");
+                  }
+
+                  document.getElementById("loading-typedevice").hidden = true;
+               }
+            }
+         }
+      }
+
+      document.getElementById("plc_supply_voltage").addEventListener("click", afterClickPlcSupplyVoltage);
+
+      function afterClickPlcSupplyVoltage() {
+         document.getElementById("alert220V").hidden = false;
+      }
+
+      document.getElementById("type_device").addEventListener("change", afterChooseTypeDevice);
+
+      function afterChooseTypeDevice() {
+         if (document.getElementById("type_device").value != "")
+            setBorder("type_device", "border-success");
+
+         document.getElementById("btn_choose").classList.add("disabled");
+
+         setEnteredInfo();
+
+         if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '' && enteredInfo.manufacturer != '' && enteredInfo.typeDevice != '') {
+            var saveInfo = saveEnteredInfo();
+            google.script.run.withSuccessHandler(chooseResult).getChooseResult(enteredInfo);
+
+            document.getElementById("loading-btnchoose").hidden = false;
+
+            function chooseResult(chooseRes) {
+               if (compareEnteredInfo(saveInfo)) {
+                  //var href = document.getElementById("btn_choose").href;
+                  document.getElementById("btn_choose").href = btnhref + "&n=" + chooseRes.join('_');
+                  document.getElementById("btn_choose").classList.remove("disabled");
+               }
+
+               document.getElementById("loading-btnchoose").hidden = true;
+            }
+         }
+      }
+
+      document.getElementById("btn_choose").addEventListener("click", btnChooseClick);
+
+      function btnChooseClick() {
+         document.getElementById("loading-btnchoose").hidden = false;
+         document.getElementById("btn_choose").classList.add("disabled");
+
+         setEnteredInfo();
+
+         if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '' && enteredInfo.manufacturer != '' && enteredInfo.typeDevice != '') {
+            google.script.run.btnChooseClicked(enteredInfo);
+         }
+      }
+
+      function setEnteredInfo() {
+         enteredInfo = {};
+         enteredInfo.avrScheme = document.getElementById("avr_scheme").value;
+         if (enteredInfo.avrScheme.startsWith("Выберите")) enteredInfo.avrScheme = "";
+         enteredInfo.powerUnit = document.getElementById("power_unit").value;
+         if (enteredInfo.powerUnit.startsWith("Выберите")) enteredInfo.powerUnit = "";
+         enteredInfo.plcSupplyVoltage = document.getElementById("plc_supply_voltage").value;
+         if (enteredInfo.plcSupplyVoltage.startsWith("Выберите")) enteredInfo.plcSupplyVoltage = "";
+         enteredInfo.manufacturer = document.getElementById("manufacturer").value;
+         if (enteredInfo.manufacturer.startsWith("Выберите")) enteredInfo.manufacturer = "";
+         enteredInfo.typeDevice = document.getElementById("type_device").value;
+         if (enteredInfo.typeDevice.startsWith("Выберите")) enteredInfo.typeDevice = "";
+      }
+
+      function saveEnteredInfo() {
+         return JSON.stringify(enteredInfo);
+      }
+
+      function compareEnteredInfo(saveInfo) {
+         setEnteredInfo();
+         if (saveInfo == JSON.stringify(enteredInfo)) {
+            return true;
+         } else {
+            return false;
+         }
+      }
+
+      function msieversion() {
+         var isIE = false;
+         var ua = window.navigator.userAgent;
+         var old_ie = ua.indexOf('MSIE ');
+         var new_ie = ua.indexOf('Trident/');
+
+         google.script.run.openPage(ua);
+
+         if ((old_ie > -1) || (new_ie > -1)) {
+            isIE = true;
+         }
+
+         if (isIE) {
+            alert("Internet Explorer не поддерживается! Используйте другой браузер (Google Chrome, Opera, Safari, Mozzila Firefox)");
+         }
+      }
+      msieversion();
+   });
+
+</script>
+
+</body>
+
+</html>

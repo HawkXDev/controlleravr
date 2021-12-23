@@ -1,0 +1,29 @@
+.container {
+    margin-top: 10px;
+}
+
+.row {
+    margin-bottom: 10px;
+}
+
+.row_margin {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.alert {
+    margin-bottom: 0;
+}
+
+#btn_choose {
+    margin-top: 15px;
+}
+
+.variant {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+#div-buttons {
+    margin-top: 20px;
+}
