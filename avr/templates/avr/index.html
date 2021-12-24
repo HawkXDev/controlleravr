@@ -137,8 +137,7 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.5.1.min.js">
 </script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
@@ -148,237 +147,258 @@
 </script>
 
 <script>
-	$(document).ready(function () {
+    $(document).ready(function () {
 
-      var enteredInfo = {};
-      var btnhref = document.getElementById("btn_choose").href;
-
-      document.getElementById("avr_scheme").addEventListener("change", afterChooseAvrScheme);
-      document.getElementById("avr_scheme").addEventListener("change", afterChooseAllInTypeAVR);
-      document.getElementById("power_unit").addEventListener("change", afterChoosePowerUnit);
-      document.getElementById("power_unit").addEventListener("change", afterChooseAllInTypeAVR);
-      document.getElementById("plc_supply_voltage").addEventListener("change", afterChooseAllInTypeAVR);
-
-      function afterChooseAvrScheme() {
-         if (document.getElementById("avr_scheme").value != "")
-            setBorder("avr_scheme", "border-success");
-      }
-
-      function afterChoosePowerUnit() {
-         if (document.getElementById("power_unit").value != "")
-            setBorder("power_unit", "border-success");
-      }
-
-      function setBorder(elementId, addBorder) {
-         document.getElementById(elementId).classList.remove("border");
-         document.getElementById(elementId).classList.remove("border-warning");
-         document.getElementById(elementId).classList.remove("border-success");
-         document.getElementById(elementId).classList.add("border");
-         document.getElementById(elementId).classList.add(addBorder);
-      }
-
-      function delBorder(elementId) {
-         document.getElementById(elementId).classList.remove("border");
-         document.getElementById(elementId).classList.remove("border-warning");
-         document.getElementById(elementId).classList.remove("border-success");
-      }
-
-      function afterChooseAllInTypeAVR() {
-         $('#manufacturer option:not(:first)').remove();
-         $('#type_device option:not(:first)').remove();
-         document.getElementById("manufacturer")[0].selected = true;
-         document.getElementById("type_device")[0].selected = true;
-
-         document.getElementById("manufacturer").disabled = true;
-         document.getElementById("type_device").disabled = true;
-         document.getElementById("btn_choose").classList.add("disabled");
-         document.getElementById("alertViborProizvoditela").hidden = true;
-         document.getElementById("alertViborNaKontaktorah").hidden = true;
-
-         setEnteredInfo();
-
-         if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '') {
-            if (enteredInfo.powerUnit == "контакторы") {
-               let newOption = new Option("не важно");
-               document.getElementById("manufacturer").add(newOption);
-               newOption = new Option("не важно");
-               document.getElementById("type_device").add(newOption);
-               document.getElementById("manufacturer")[1].selected = true;
-               document.getElementById("type_device")[1].selected = true;
-
-               document.getElementById("alertViborDoctupen").hidden = true;
-               document.getElementById("alertViborNaKontaktorah").hidden = false;
-               document.getElementById("alertViborProizvoditela").hidden = true;
-
-               document.getElementById("manufacturer").disabled = true;
-
-               setBorder("manufacturer", "border-success");
-               setBorder("type_device", "border-success");
-
-               afterChooseTypeDevice();
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
-            else {
-               document.getElementById("alertViborNaKontaktorah").hidden = true;
-               document.getElementById("alertViborDoctupen").hidden = false;
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
 
-               document.getElementById("type_device").disabled = true;
-               delBorder("manufacturer");
-               delBorder("type_device");
+        let enteredInfo = {};
+        const btnhref = document.getElementById("btn_choose").href;
 
-               var saveInfo = saveEnteredInfo();
-               google.script.run.withSuccessHandler(getListBrands).returnListBrands(enteredInfo);
+        document.getElementById("avr_scheme").addEventListener("change", afterChooseAvrScheme);
+        document.getElementById("avr_scheme").addEventListener("change", afterChooseAllInTypeAVR);
+        document.getElementById("power_unit").addEventListener("change", afterChoosePowerUnit);
+        document.getElementById("power_unit").addEventListener("change", afterChooseAllInTypeAVR);
+        document.getElementById("plc_supply_voltage").addEventListener("change", afterChooseAllInTypeAVR);
 
-               document.getElementById("loading-manufacturer").hidden = false;
+        function afterChooseAvrScheme() {
+            if (document.getElementById("avr_scheme").value !== "")
+                setBorder("avr_scheme", "border-success");
+        }
 
-               function getListBrands(listBrands) {
-                  if (compareEnteredInfo(saveInfo)) {
-                     for (var i = 0; i < listBrands.length; i++) {
-                        let newOption = new Option(listBrands[i]);
-                        document.getElementById("manufacturer").add(newOption);
-                     }
+        function afterChoosePowerUnit() {
+            if (document.getElementById("power_unit").value !== "")
+                setBorder("power_unit", "border-success");
+        }
 
-                     setBorder("manufacturer", "border-warning");
-                     document.getElementById("manufacturer").disabled = false;
-                     document.getElementById("alertViborDoctupen").hidden = true;
-                     document.getElementById("alertViborProizvoditela").hidden = false;
-                  }
+        function setBorder(elementId, addBorder) {
+            document.getElementById(elementId).classList.remove("border");
+            document.getElementById(elementId).classList.remove("border-warning");
+            document.getElementById(elementId).classList.remove("border-success");
+            document.getElementById(elementId).classList.add("border");
+            document.getElementById(elementId).classList.add(addBorder);
+        }
 
-                  document.getElementById("loading-manufacturer").hidden = true;
-               }
+        function delBorder(elementId) {
+            document.getElementById(elementId).classList.remove("border");
+            document.getElementById(elementId).classList.remove("border-warning");
+            document.getElementById(elementId).classList.remove("border-success");
+        }
+
+        function afterChooseAllInTypeAVR() {
+            $('#manufacturer option:not(:first)').remove();
+            $('#type_device option:not(:first)').remove();
+            document.getElementById("manufacturer")[0].selected = true;
+            document.getElementById("type_device")[0].selected = true;
+
+            document.getElementById("manufacturer").disabled = true;
+            document.getElementById("type_device").disabled = true;
+            document.getElementById("btn_choose").classList.add("disabled");
+            document.getElementById("alertViborProizvoditela").hidden = true;
+            document.getElementById("alertViborNaKontaktorah").hidden = true;
+
+            setEnteredInfo();
+
+            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '') {
+                if (enteredInfo.powerUnit === "контакторы") {
+                    let newOption = new Option("не важно");
+                    document.getElementById("manufacturer").add(newOption);
+                    newOption = new Option("не важно");
+                    document.getElementById("type_device").add(newOption);
+                    document.getElementById("manufacturer")[1].selected = true;
+                    document.getElementById("type_device")[1].selected = true;
+
+                    document.getElementById("alertViborDoctupen").hidden = true;
+                    document.getElementById("alertViborNaKontaktorah").hidden = false;
+                    document.getElementById("alertViborProizvoditela").hidden = true;
+
+                    document.getElementById("manufacturer").disabled = true;
+
+                    setBorder("manufacturer", "border-success");
+                    setBorder("type_device", "border-success");
+
+                    afterChooseTypeDevice();
+                } else {
+                    document.getElementById("alertViborNaKontaktorah").hidden = true;
+                    document.getElementById("alertViborDoctupen").hidden = false;
+
+                    document.getElementById("type_device").disabled = true;
+                    delBorder("manufacturer");
+                    delBorder("type_device");
+
+                    const saveInfo = saveEnteredInfo();
+
+                    const postdata = {
+                        'saveInfo': saveInfo,
+                        'csrfmiddlewaretoken': csrftoken
+                    };
+                    $.post("ajax/getListBrands", postdata, function (data) {
+                        getListBrands(data);
+                    });
+
+                    {#google.script.run.withSuccessHandler(getListBrands).returnListBrands(enteredInfo);#}
+
+                    document.getElementById("loading-manufacturer").hidden = false;
+
+                    function getListBrands(listBrands) {
+                        if (compareEnteredInfo(saveInfo)) {
+                            for (let i = 0; i < listBrands.length; i++) {
+                                let newOption = new Option(listBrands[i]);
+                                document.getElementById("manufacturer").add(newOption);
+                            }
+
+                            setBorder("manufacturer", "border-warning");
+                            document.getElementById("manufacturer").disabled = false;
+                            document.getElementById("alertViborDoctupen").hidden = true;
+                            document.getElementById("alertViborProizvoditela").hidden = false;
+                        }
+
+                        document.getElementById("loading-manufacturer").hidden = true;
+                    }
+                }
             }
-         }
-      }
+        }
 
-      document.getElementById("manufacturer").addEventListener("change", afterChooseManufacturer);
+        document.getElementById("manufacturer").addEventListener("change", afterChooseManufacturer);
 
-      function afterChooseManufacturer() {
-         if (document.getElementById("manufacturer").value != "")
-            setBorder("manufacturer", "border-success");
+        function afterChooseManufacturer() {
+            if (document.getElementById("manufacturer").value !== "")
+                setBorder("manufacturer", "border-success");
 
-         document.getElementById("type_device").disabled = true;
-         delBorder("type_device");
-         $('#type_device option:not(:first)').remove();
-         document.getElementById("type_device")[0].selected = true;
-         document.getElementById("btn_choose").classList.add("disabled");
+            document.getElementById("type_device").disabled = true;
+            delBorder("type_device");
+            $('#type_device option:not(:first)').remove();
+            document.getElementById("type_device")[0].selected = true;
+            document.getElementById("btn_choose").classList.add("disabled");
 
-         setEnteredInfo();
+            setEnteredInfo();
 
-         if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '' && enteredInfo.manufacturer != '') {
-            if (enteredInfo.manufacturer != "не важно") {
-               var saveInfo = saveEnteredInfo();
-               google.script.run.withSuccessHandler(getListTypes).returnListTypes(enteredInfo);
+            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' && enteredInfo.manufacturer !== '') {
+                if (enteredInfo.manufacturer !== "не важно") {
+                    var saveInfo = saveEnteredInfo();
+                    google.script.run.withSuccessHandler(getListTypes).returnListTypes(enteredInfo);
 
-               document.getElementById("loading-typedevice").hidden = false;
+                    document.getElementById("loading-typedevice").hidden = false;
 
-               function getListTypes(listTypes) {
-                  if (compareEnteredInfo(saveInfo)) {
-                     for (var i = 0; i < listTypes.length; i++) {
-                        let newOption = new Option(listTypes[i]);
-                        document.getElementById("type_device").add(newOption);
-                     }
+                    function getListTypes(listTypes) {
+                        if (compareEnteredInfo(saveInfo)) {
+                            for (var i = 0; i < listTypes.length; i++) {
+                                let newOption = new Option(listTypes[i]);
+                                document.getElementById("type_device").add(newOption);
+                            }
 
-                     document.getElementById("type_device").disabled = false;
-                     setBorder("type_device", "border-warning");
-                  }
+                            document.getElementById("type_device").disabled = false;
+                            setBorder("type_device", "border-warning");
+                        }
 
-                  document.getElementById("loading-typedevice").hidden = true;
-               }
+                        document.getElementById("loading-typedevice").hidden = true;
+                    }
+                }
             }
-         }
-      }
+        }
 
-      document.getElementById("plc_supply_voltage").addEventListener("click", afterClickPlcSupplyVoltage);
+        document.getElementById("plc_supply_voltage").addEventListener("click", afterClickPlcSupplyVoltage);
 
-      function afterClickPlcSupplyVoltage() {
-         document.getElementById("alert220V").hidden = false;
-      }
+        function afterClickPlcSupplyVoltage() {
+            document.getElementById("alert220V").hidden = false;
+        }
 
-      document.getElementById("type_device").addEventListener("change", afterChooseTypeDevice);
+        document.getElementById("type_device").addEventListener("change", afterChooseTypeDevice);
 
-      function afterChooseTypeDevice() {
-         if (document.getElementById("type_device").value != "")
-            setBorder("type_device", "border-success");
+        function afterChooseTypeDevice() {
+            if (document.getElementById("type_device").value !== "")
+                setBorder("type_device", "border-success");
 
-         document.getElementById("btn_choose").classList.add("disabled");
+            document.getElementById("btn_choose").classList.add("disabled");
 
-         setEnteredInfo();
+            setEnteredInfo();
 
-         if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '' && enteredInfo.manufacturer != '' && enteredInfo.typeDevice != '') {
-            var saveInfo = saveEnteredInfo();
-            google.script.run.withSuccessHandler(chooseResult).getChooseResult(enteredInfo);
+            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' && enteredInfo.manufacturer !== '' && enteredInfo.typeDevice !== '') {
+                var saveInfo = saveEnteredInfo();
+                google.script.run.withSuccessHandler(chooseResult).getChooseResult(enteredInfo);
 
+                document.getElementById("loading-btnchoose").hidden = false;
+
+                function chooseResult(chooseRes) {
+                    if (compareEnteredInfo(saveInfo)) {
+                        //var href = document.getElementById("btn_choose").href;
+                        document.getElementById("btn_choose").href = btnhref + "&n=" + chooseRes.join('_');
+                        document.getElementById("btn_choose").classList.remove("disabled");
+                    }
+
+                    document.getElementById("loading-btnchoose").hidden = true;
+                }
+            }
+        }
+
+        document.getElementById("btn_choose").addEventListener("click", btnChooseClick);
+
+        function btnChooseClick() {
             document.getElementById("loading-btnchoose").hidden = false;
+            document.getElementById("btn_choose").classList.add("disabled");
 
-            function chooseResult(chooseRes) {
-               if (compareEnteredInfo(saveInfo)) {
-                  //var href = document.getElementById("btn_choose").href;
-                  document.getElementById("btn_choose").href = btnhref + "&n=" + chooseRes.join('_');
-                  document.getElementById("btn_choose").classList.remove("disabled");
-               }
+            setEnteredInfo();
 
-               document.getElementById("loading-btnchoose").hidden = true;
+            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' && enteredInfo.manufacturer !== '' && enteredInfo.typeDevice !== '') {
+                google.script.run.btnChooseClicked(enteredInfo);
             }
-         }
-      }
+        }
 
-      document.getElementById("btn_choose").addEventListener("click", btnChooseClick);
+        function setEnteredInfo() {
+            enteredInfo = {};
+            enteredInfo.avrScheme = document.getElementById("avr_scheme").value;
+            if (enteredInfo.avrScheme.startsWith("Выберите")) enteredInfo.avrScheme = "";
+            enteredInfo.powerUnit = document.getElementById("power_unit").value;
+            if (enteredInfo.powerUnit.startsWith("Выберите")) enteredInfo.powerUnit = "";
+            enteredInfo.plcSupplyVoltage = document.getElementById("plc_supply_voltage").value;
+            if (enteredInfo.plcSupplyVoltage.startsWith("Выберите")) enteredInfo.plcSupplyVoltage = "";
+            enteredInfo.manufacturer = document.getElementById("manufacturer").value;
+            if (enteredInfo.manufacturer.startsWith("Выберите")) enteredInfo.manufacturer = "";
+            enteredInfo.typeDevice = document.getElementById("type_device").value;
+            if (enteredInfo.typeDevice.startsWith("Выберите")) enteredInfo.typeDevice = "";
+        }
 
-      function btnChooseClick() {
-         document.getElementById("loading-btnchoose").hidden = false;
-         document.getElementById("btn_choose").classList.add("disabled");
+        function saveEnteredInfo() {
+            return JSON.stringify(enteredInfo);
+        }
 
-         setEnteredInfo();
+        function compareEnteredInfo(saveInfo) {
+            setEnteredInfo();
+            return saveInfo === JSON.stringify(enteredInfo);
+        }
 
-         if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '' && enteredInfo.manufacturer != '' && enteredInfo.typeDevice != '') {
-            google.script.run.btnChooseClicked(enteredInfo);
-         }
-      }
+        function msieversion() {
+            var isIE = false;
+            var ua = window.navigator.userAgent;
+            var old_ie = ua.indexOf('MSIE ');
+            var new_ie = ua.indexOf('Trident/');
 
-      function setEnteredInfo() {
-         enteredInfo = {};
-         enteredInfo.avrScheme = document.getElementById("avr_scheme").value;
-         if (enteredInfo.avrScheme.startsWith("Выберите")) enteredInfo.avrScheme = "";
-         enteredInfo.powerUnit = document.getElementById("power_unit").value;
-         if (enteredInfo.powerUnit.startsWith("Выберите")) enteredInfo.powerUnit = "";
-         enteredInfo.plcSupplyVoltage = document.getElementById("plc_supply_voltage").value;
-         if (enteredInfo.plcSupplyVoltage.startsWith("Выберите")) enteredInfo.plcSupplyVoltage = "";
-         enteredInfo.manufacturer = document.getElementById("manufacturer").value;
-         if (enteredInfo.manufacturer.startsWith("Выберите")) enteredInfo.manufacturer = "";
-         enteredInfo.typeDevice = document.getElementById("type_device").value;
-         if (enteredInfo.typeDevice.startsWith("Выберите")) enteredInfo.typeDevice = "";
-      }
+            google.script.run.openPage(ua);
 
-      function saveEnteredInfo() {
-         return JSON.stringify(enteredInfo);
-      }
+            if ((old_ie > -1) || (new_ie > -1)) {
+                isIE = true;
+            }
 
-      function compareEnteredInfo(saveInfo) {
-         setEnteredInfo();
-         if (saveInfo == JSON.stringify(enteredInfo)) {
-            return true;
-         } else {
-            return false;
-         }
-      }
+            if (isIE) {
+                alert("Internet Explorer не поддерживается! Используйте другой браузер (Google Chrome, Opera, Safari, Mozzila Firefox)");
+            }
+        }
 
-      function msieversion() {
-         var isIE = false;
-         var ua = window.navigator.userAgent;
-         var old_ie = ua.indexOf('MSIE ');
-         var new_ie = ua.indexOf('Trident/');
-
-         google.script.run.openPage(ua);
-
-         if ((old_ie > -1) || (new_ie > -1)) {
-            isIE = true;
-         }
-
-         if (isIE) {
-            alert("Internet Explorer не поддерживается! Используйте другой браузер (Google Chrome, Opera, Safari, Mozzila Firefox)");
-         }
-      }
-      msieversion();
-   });
+        msieversion();
+    });
 
 </script>
 

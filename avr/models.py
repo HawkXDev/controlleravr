@@ -7,18 +7,18 @@ class AVRIndex(models.Model):
     name = models.TextField()
     power_devices_brand = models.TextField()
     power_devices_type = models.TextField()
-    spring_time = models.TextField()
+    spring_time = models.TextField(default=None, blank=True, null=True)
     plc = models.TextField()
-    extension_module = models.TextField()
+    extension_module = models.TextField(default=None, blank=True, null=True)
     specification = models.TextField()
-    documentation = models.TextField()
+    documentation = models.TextField(default=None, blank=True, null=True)
     specification_link = models.TextField()
     xlsx_export_link = models.TextField()
     pdf_avr_link = models.TextField()
     pdf_scheme_link = models.TextField()
     zip_link = models.TextField()
     xlsx_link = models.TextField()
-    status = models.TextField()
+    status = models.TextField(default=None, blank=True, null=True)
 
 
 class AVRLog(models.Model):
