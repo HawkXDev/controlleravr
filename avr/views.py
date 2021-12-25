@@ -1,17 +1,30 @@
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from avr.models import AVRIndex
 
+global_n = None
+
 
 def index(request):
-    return render(request, 'avr/index.html')
+    global global_n
+    global_n = [80, 125]
+    if global_n:
+        n = global_n
+        global_n = None
+        print(f'{n = }')
+        article1, article2 = get_articles(n)
+        return render(request, 'avr/results.html', {'article1': article1, 'article2': article2})
+    else:
+        return render(request, 'avr/index.html')
 
 
-def results(request):
-    return render(request, 'avr/results.html')
+def get_articles(n):
+    article1 = AVRIndex.objects.filter(id=n[0])[0]
+    article2 = AVRIndex.objects.filter(id=n[1])[0]
+    return article1, article2
 
 
 @require_POST
@@ -54,7 +67,20 @@ def getChooseResult(request):
                                         power_devices_type=save_info['typeDevice']) \
         .values_list('id', flat=True)
     chooseIds = list(chooseIds)
+    global global_n
+    global_n = chooseIds
     return JsonResponse(chooseIds, safe=False)
+
+
+@require_POST
+def logs(request):
+    log_number = request.POST.get('log_number')
+    v = request.POST.get('v')
+    t = request.POST.get('t')
+    print(log_number)
+    print(v)
+    print(t)
+    return HttpResponse('')
 
 
 @require_POST

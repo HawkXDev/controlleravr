@@ -128,7 +128,9 @@
 
     <div class="row row_margin">
         <div class="col-12 col-lg-6">
-            <a href="<?= ScriptApp.getService().getUrl(); ?>?v=res" id="btn_choose"
+{#            <a href="{% url 'index' %}?v=res" id="btn_choose"#}
+{#               class="btn btn-primary btn-lg disabled" tabindex="-1" role="button" aria-disabled="true">Выбрать</a>#}
+            <a href="{% url 'index' %}" id="btn_choose"
                class="btn btn-primary btn-lg disabled" tabindex="-1" role="button" aria-disabled="true">Выбрать</a>
             <div id="loading-btnchoose" class="spinner-border spinner-border-sm text-warning" role="status" hidden>
                 <span class="sr-only">Loading...</span>
@@ -348,8 +350,8 @@
 
                 function chooseResult(chooseIds) {
                     if (compareEnteredInfo(saveInfo)) {
-                        //var href = document.getElementById("btn_choose").href;
-                        document.getElementById("btn_choose").href = btnhref + "&n=" + chooseIds.join('_');
+                        {#var href = document.getElementById("btn_choose").href;#}
+                        {#document.getElementById("btn_choose").href = btnhref + "&n=" + chooseIds.join('_');#}
                         document.getElementById("btn_choose").classList.remove("disabled");
                     }
 
@@ -357,7 +359,7 @@
                 }
             }
         }
-
+        /*
         document.getElementById("btn_choose").addEventListener("click", btnChooseClick);
 
         function btnChooseClick() {
@@ -366,10 +368,11 @@
 
             setEnteredInfo();
 
-            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' && enteredInfo.manufacturer !== '' && enteredInfo.typeDevice !== '') {
+            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' &&
+                enteredInfo.manufacturer !== '' && enteredInfo.typeDevice !== '') {
                 google.script.run.btnChooseClicked(enteredInfo);
             }
-        }
+        }*/
 
         function setEnteredInfo() {
             enteredInfo = {};

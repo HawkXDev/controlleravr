@@ -1,7 +1,7 @@
 {% load static %}
+{% csrf_token %}
 <!DOCTYPE html>
 <html>
-
 <head>
     <base target="_self">
     <meta charset="utf-8">
@@ -27,29 +27,27 @@
                     <span id="badge-dark" class="badge badge-dark" hidden>Снят с продажи, см. 2 вариант</span></h5>
             </div>
         </div>
-
         <div class="row">
             <div class="col-12 col-lg-6">
-                <h6>Артикул: <?= article1.article; ?></h6>
+                <h6>Артикул: {{ article1.article }}</h6>
             </div>
         </div>
-
         <div class="row">
             <div class="col-12 col-lg-6">
-                <h6><?= article1.name; ?></h6>
+                <h6>{{ article1.name }}</h6>
             </div>
         </div>
-
         <div class="row">
             <div class="col-12 col-lg-6">
-                <p>Схема АВР: <?= article1.avrScheme; ?></p>
-                <p id="powerUnit1">Силовая часть: <?= article1.manufacturer; ?> (<?= article1.typeDevice; ?>)</p>
-                <p>Контроллер: <?= article1.plc; ?> (Easy500/700)</p>
-                <p id="modulExt1">Модуль расширения: <?= article1.modulExt; ?></p>
+                <p>Схема АВР: {{ article1.avr_scheme }}</p>
+                <p id="powerUnit1">Силовая часть: {{ article1.power_devices_brand }}
+                    ({{ article1.power_devices_type }})</p>
+                <p>Контроллер: {{ article1.plc }} (Easy500/700)</p>
+                <p id="modulExt1">Модуль расширения: {{ article1.extension_module }}</p>
                 <p id="download-docs-variant-1">Скачать:&nbsp;
-                    <a href="<?= article1.zipRef; ?>" id="aDocArt1" target="_blank">всю
+                    <a href="{{ article1.zip_link }}" id="aDocArt1" target="_blank">всю
                         документацию</a>&nbsp;или&nbsp;
-                    <a href="<?= article1.urlSpecXlsx; ?>" id="aSpecArt1" target="_blank">только спецификацию
+                    <a href="{{ article1.xlsx_export_link }}" id="aSpecArt1" target="_blank">только спецификацию
                         (xlsx)</a>
                 </p>
             </div>
@@ -62,29 +60,27 @@
                 <h5><u>2 вариант</u> <span class="badge badge-primary">New! easyE4</span></h5>
             </div>
         </div>
-
         <div class="row">
             <div class="col-12 col-lg-6">
-                <h6>Артикул: <?= article2.article; ?></h6>
+                <h6>Артикул: {{ article2.article }}</h6>
             </div>
         </div>
-
         <div class="row">
             <div class="col-12 col-lg-6">
-                <h6><?= article2.name; ?></h6>
+                <h6>{{ article2.name }}</h6>
             </div>
         </div>
-
         <div class="row">
             <div class="col-12 col-lg-6">
-                <p>Схема АВР: <?= article2.avrScheme; ?></p>
-                <p id="powerUnit2">Силовая часть: <?= article2.manufacturer; ?> (<?= article2.typeDevice; ?>)</p>
-                <p>Контроллер: <?= article2.plc; ?> (easyE4)</p>
-                <p id="modulExt2">Модуль расширения: <?= article2.modulExt; ?></p>
+                <p>Схема АВР: {{ article2.avr_scheme }}</p>
+                <p id="powerUnit2">Силовая часть: {{ article2.power_devices_brand }}
+                    ({{ article2.power_devices_type }})</p>
+                <p>Контроллер: {{ article2.plc }} (easyE4)</p>
+                <p id="modulExt2">Модуль расширения: {{ article2.extension_module }}</p>
                 <p>Скачать:&nbsp;
-                    <a href="<?= article2.zipRef; ?>" id="aDocArt2" target="_blank">всю
+                    <a href="{{ article2.zip_link }}" id="aDocArt2" target="_blank">всю
                         документацию</a>&nbsp;или&nbsp;
-                    <a href="<?= article2.urlSpecXlsx; ?>" id="aSpecArt2" target="_blank">только спецификацию
+                    <a href="{{ article2.xlsx_export_link }}" id="aSpecArt2" target="_blank">только спецификацию
                         (xlsx)</a>
                 </p>
             </div>
@@ -93,67 +89,76 @@
 
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-</script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
 </script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
         integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
 </script>
+
 <script>
-    if (<?
-    = article1.removedFromSale ?
-    > ==
-    'true'
-    )
-    {
+    {% if article1.status == 'OLD' %}
         document.getElementById("badge-dark").hidden = false
         document.getElementById("download-docs-variant-1").hidden = true
-    }
+    {% endif %}
+
+    $(document).ready(function () {
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        if (document.getElementById("modulExt1").innerText === "Модуль расширения: None") {
+            document.getElementById("modulExt1").remove();
+        }
+        if (document.getElementById("powerUnit1").innerText === "Силовая часть: не важно (не важно)") {
+            document.getElementById("powerUnit1").innerText = "Силовая часть: не важно"
+        }
+        if (document.getElementById("modulExt2").innerText === "Модуль расширения: None") {
+            document.getElementById("modulExt2").remove();
+        }
+        if (document.getElementById("powerUnit2").innerText === "Силовая часть: не важно (не важно)") {
+            document.getElementById("powerUnit2").innerText = "Силовая часть: не важно"
+        }
+
+        document.getElementById("aDocArt1").addEventListener("click", aDocArt1Click);
+        document.getElementById("aSpecArt1").addEventListener("click", aSpecArt1Click);
+        document.getElementById("aDocArt2").addEventListener("click", aDocArt2Click);
+        document.getElementById("aSpecArt2").addEventListener("click", aSpecArt2Click);
+        function log_data(v, n) {
+            const postdata = {
+                'log_number': 3,
+                'v': v,
+                't': document.getElementById("divVariant" + n).innerText,
+                'csrfmiddlewaretoken': csrftoken
+            };
+            $.post("{% url 'logs' %}", postdata);
+        }
+        function aDocArt1Click() {
+            log_data('doc', '1')
+        }
+        function aSpecArt1Click() {
+            log_data('spec', '1')
+        }
+        function aDocArt2Click() {
+            log_data('doc', '2')
+        }
+        function aSpecArt2Click() {
+            log_data('spec', '2')
+        }
+    });
 </script>
-
-<script>
-	$(document).ready(function () {
-      if (document.getElementById("modulExt1").innerText == "Модуль расширения:") {
-         document.getElementById("modulExt1").remove();
-      }
-
-      if (document.getElementById("powerUnit1").innerText == "Силовая часть: не важно (не важно)") {
-         document.getElementById("powerUnit1").innerText = "Силовая часть: не важно"
-      }
-
-      if (document.getElementById("modulExt2").innerText == "Модуль расширения:") {
-         document.getElementById("modulExt2").remove();
-      }
-
-      if (document.getElementById("powerUnit2").innerText == "Силовая часть: не важно (не важно)") {
-         document.getElementById("powerUnit2").innerText = "Силовая часть: не важно"
-      }
-
-
-      document.getElementById("aDocArt1").addEventListener("click", aDocArt1Click);
-      document.getElementById("aSpecArt1").addEventListener("click", aSpecArt1Click);
-      document.getElementById("aDocArt2").addEventListener("click", aDocArt2Click);
-      document.getElementById("aSpecArt2").addEventListener("click", aSpecArt2Click);
-
-      function aDocArt1Click() {
-         google.script.run.aClicked({ v: "doc", t: document.getElementById("divVariant1").innerText });
-      }
-      function aSpecArt1Click() {
-         google.script.run.aClicked({ v: "spec", t: document.getElementById("divVariant1").innerText });
-      }
-      function aDocArt2Click() {
-         google.script.run.aClicked({ v: "doc", t: document.getElementById("divVariant2").innerText });
-      }
-      function aSpecArt2Click() {
-         google.script.run.aClicked({ v: "spec", t: document.getElementById("divVariant2").innerText });
-      }
-   });
-
-</script>
-
 </body>
-
 </html>
