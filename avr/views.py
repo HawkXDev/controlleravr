@@ -17,39 +17,44 @@ def results(request):
 @require_POST
 def getListBrands(request):
     save_info = json.loads(request.POST.get('saveInfo'))
-    print(save_info)
-    end_text_for_name = "для схем на контакторах"
-    if save_info['powerUnit'] == "автоматические выключатели":
-        end_text_for_name = "для схем на авт. выкл."
-    list_brands = AVRIndex.objects.filter(avr_scheme=save_info['avrScheme'], name__endswith=end_text_for_name)\
-        .values_list('power_devices_brand')
-    list_brands = list(set([x for x, in list_brands]))
-    list_brands.sort()
-    print(list_brands)
-    return JsonResponse(['ABB', 'Eaton', 'Delta', 'Relpol'], safe=False)
+    list_brands = []
+    if save_info['avrScheme'] and save_info['powerUnit'] and save_info['plcSupplyVoltage']:
+        end_text_for_name = "для схем на авт. выкл." \
+            if save_info['powerUnit'] == "автоматические выключатели" \
+            else "для схем на контакторах"
+        list_brands = AVRIndex.objects.filter(avr_scheme=save_info['avrScheme'], name__endswith=end_text_for_name)\
+            .values_list('power_devices_brand', flat=True).distinct().order_by('power_devices_brand')
+        list_brands = list(list_brands)
+    return JsonResponse(list_brands, safe=False)
 
 
-# function returnListBrands(enteredInfo) {
-#   if (enteredInfo.avrScheme != '' && enteredInfo.powerUnit != '' && enteredInfo.plcSupplyVoltage != '') {
-#     var end_text_for_name = "для схем на контакторах";
-#
-#     if (enteredInfo.powerUnit == "автоматические выключатели") {
-#       end_text_for_name = "для схем на авт. выкл.";
-#     }
-#
-#     var list_brands = [];
-#     var data = ws_datafile.getDataRange().getValues();
-#
-#     for (let i = 1; i < data.length; i++) {
-#       if (data[i][0] == enteredInfo.avrScheme && data[i][2].endsWith(end_text_for_name)) {
-#         list_brands.push(data[i][3]);
-#       }
-#     }
-#
-#     list_brands = unique(list_brands).sort();
-#     return list_brands;
-#   }
-# }
+@require_POST
+def getListTypes(request):
+    save_info = json.loads(request.POST.get('saveInfo'))
+    list_types = []
+    if save_info['avrScheme'] and save_info['powerUnit'] and save_info['plcSupplyVoltage'] and save_info['manufacturer']:
+        end_text_for_name = "для схем на авт. выкл." \
+            if save_info['powerUnit'] == "автоматические выключатели" \
+            else "для схем на контакторах"
+        list_types = AVRIndex.objects.filter(avr_scheme=save_info['avrScheme'], name__endswith=end_text_for_name,
+                                             power_devices_brand=save_info['manufacturer']) \
+            .values_list('power_devices_type', flat=True).distinct().order_by('power_devices_type')
+        list_types = list(list_types)
+    return JsonResponse(list_types, safe=False)
+
+
+@require_POST
+def getChooseResult(request):
+    save_info = json.loads(request.POST.get('saveInfo'))
+    end_text_for_name = "для схем на авт. выкл." \
+        if save_info['powerUnit'] == "автоматические выключатели" \
+        else "для схем на контакторах"
+    chooseIds = AVRIndex.objects.filter(avr_scheme=save_info['avrScheme'], name__endswith=end_text_for_name,
+                                        power_devices_brand=save_info['manufacturer'],
+                                        power_devices_type=save_info['typeDevice']) \
+        .values_list('id', flat=True)
+    chooseIds = list(chooseIds)
+    return JsonResponse(chooseIds, safe=False)
 
 
 @require_POST

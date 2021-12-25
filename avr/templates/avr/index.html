@@ -1,4 +1,5 @@
 {% load static %}
+{% csrf_token %}
 <!DOCTYPE html>
 <html>
 
@@ -245,11 +246,9 @@
                         'saveInfo': saveInfo,
                         'csrfmiddlewaretoken': csrftoken
                     };
-                    $.post("ajax/getListBrands", postdata, function (data) {
+                    $.post("{% url 'getListBrands' %}", postdata, function (data) {
                         getListBrands(data);
                     });
-
-                    {#google.script.run.withSuccessHandler(getListBrands).returnListBrands(enteredInfo);#}
 
                     document.getElementById("loading-manufacturer").hidden = false;
 
@@ -288,14 +287,21 @@
 
             if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' && enteredInfo.manufacturer !== '') {
                 if (enteredInfo.manufacturer !== "не важно") {
-                    var saveInfo = saveEnteredInfo();
-                    google.script.run.withSuccessHandler(getListTypes).returnListTypes(enteredInfo);
+                    const saveInfo = saveEnteredInfo();
+
+                    const postdata = {
+                        'saveInfo': saveInfo,
+                        'csrfmiddlewaretoken': csrftoken
+                    };
+                    $.post("{% url 'getListTypes' %}", postdata, function (data) {
+                        getListTypes(data);
+                    });
 
                     document.getElementById("loading-typedevice").hidden = false;
 
                     function getListTypes(listTypes) {
                         if (compareEnteredInfo(saveInfo)) {
-                            for (var i = 0; i < listTypes.length; i++) {
+                            for (let i = 0; i < listTypes.length; i++) {
                                 let newOption = new Option(listTypes[i]);
                                 document.getElementById("type_device").add(newOption);
                             }
@@ -326,16 +332,24 @@
 
             setEnteredInfo();
 
-            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' && enteredInfo.manufacturer !== '' && enteredInfo.typeDevice !== '') {
-                var saveInfo = saveEnteredInfo();
-                google.script.run.withSuccessHandler(chooseResult).getChooseResult(enteredInfo);
+            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' &&
+                enteredInfo.manufacturer !== '' && enteredInfo.typeDevice !== '') {
+                const saveInfo = saveEnteredInfo();
+
+                const postdata = {
+                    'saveInfo': saveInfo,
+                    'csrfmiddlewaretoken': csrftoken
+                };
+                $.post("{% url 'getChooseResult' %}", postdata, function (data) {
+                    chooseResult(data);
+                });
 
                 document.getElementById("loading-btnchoose").hidden = false;
 
-                function chooseResult(chooseRes) {
+                function chooseResult(chooseIds) {
                     if (compareEnteredInfo(saveInfo)) {
                         //var href = document.getElementById("btn_choose").href;
-                        document.getElementById("btn_choose").href = btnhref + "&n=" + chooseRes.join('_');
+                        document.getElementById("btn_choose").href = btnhref + "&n=" + chooseIds.join('_');
                         document.getElementById("btn_choose").classList.remove("disabled");
                     }
 
