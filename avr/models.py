@@ -2,15 +2,15 @@ from django.db import models
 
 
 class AVRIndex(models.Model):
-    avr_scheme = models.TextField()
-    article = models.TextField()
-    name = models.TextField()
-    power_devices_brand = models.TextField()
-    power_devices_type = models.TextField()
-    spring_time = models.TextField(default=None, blank=True, null=True)
-    plc = models.TextField()
-    extension_module = models.TextField(default=None, blank=True, null=True)
-    specification = models.TextField()
+    avr_scheme = models.CharField(max_length=5)
+    article = models.CharField(max_length=15)
+    name = models.CharField(max_length=100)
+    power_devices_brand = models.CharField(max_length=100)
+    power_devices_type = models.CharField(max_length=100)
+    spring_time = models.CharField(max_length=50, default=None, blank=True, null=True)
+    plc = models.CharField(max_length=10)
+    extension_module = models.CharField(max_length=10, default=None, blank=True, null=True)
+    specification = models.CharField(max_length=30)
     documentation = models.TextField(default=None, blank=True, null=True)
     specification_link = models.TextField()
     xlsx_export_link = models.TextField()
@@ -19,15 +19,6 @@ class AVRIndex(models.Model):
     zip_link = models.TextField()
     xlsx_link = models.TextField()
     status = models.TextField(default=None, blank=True, null=True)
-
-
-class AVRLog(models.Model):
-    date = models.DateTimeField()
-    avr_scheme = models.TextField()
-    power_part = models.TextField()
-    plc_voltage = models.TextField()
-    brand = models.TextField()
-    type = models.TextField()
 
 
 class AVRSpec(models.Model):
@@ -41,3 +32,23 @@ class AVRSpecData(models.Model):
     number = models.IntegerField()
     item = models.TextField()
     value = models.TextField()
+
+
+class AVRLog1(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    avr_scheme = models.CharField(max_length=5)
+    power_part = models.CharField(max_length=30)
+    plc_voltage = models.CharField(max_length=10)
+    brand = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+
+
+class AVRLog2(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    ua = models.TextField()
+
+
+class AVRLog3(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    type = models.CharField(max_length=5)
+    info = models.TextField()

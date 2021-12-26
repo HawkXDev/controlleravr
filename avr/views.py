@@ -1,16 +1,18 @@
 import json
+from datetime import datetime
+
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from avr.models import AVRIndex
+from avr.models import AVRIndex, AVRLog1, AVRLog2, AVRLog3
 
 global_n = None
 
 
 def index(request):
     global global_n
-    global_n = [80, 125]
+    # global_n = [80, 125]
     if global_n:
         n = global_n
         global_n = None
@@ -35,7 +37,7 @@ def getListBrands(request):
         end_text_for_name = "для схем на авт. выкл." \
             if save_info['powerUnit'] == "автоматические выключатели" \
             else "для схем на контакторах"
-        list_brands = AVRIndex.objects.filter(avr_scheme=save_info['avrScheme'], name__endswith=end_text_for_name)\
+        list_brands = AVRIndex.objects.filter(avr_scheme=save_info['avrScheme'], name__endswith=end_text_for_name) \
             .values_list('power_devices_brand', flat=True).distinct().order_by('power_devices_brand')
         list_brands = list(list_brands)
     return JsonResponse(list_brands, safe=False)
@@ -45,7 +47,8 @@ def getListBrands(request):
 def getListTypes(request):
     save_info = json.loads(request.POST.get('saveInfo'))
     list_types = []
-    if save_info['avrScheme'] and save_info['powerUnit'] and save_info['plcSupplyVoltage'] and save_info['manufacturer']:
+    if save_info['avrScheme'] and save_info['powerUnit'] and save_info['plcSupplyVoltage'] and save_info[
+        'manufacturer']:
         end_text_for_name = "для схем на авт. выкл." \
             if save_info['powerUnit'] == "автоматические выключатели" \
             else "для схем на контакторах"
@@ -74,12 +77,26 @@ def getChooseResult(request):
 
 @require_POST
 def logs(request):
-    log_number = request.POST.get('log_number')
-    v = request.POST.get('v')
-    t = request.POST.get('t')
-    print(log_number)
-    print(v)
-    print(t)
+    log_number = int(request.POST.get('log_number'))
+    if log_number == 1:
+        save_info = json.loads(request.POST.get('saveInfo'))
+        AVRLog1.objects.create(
+            avr_scheme=save_info['avrScheme'],
+            power_part=save_info['powerUnit'],
+            plc_voltage=save_info['plcSupplyVoltage'],
+            brand=save_info['manufacturer'],
+            type=save_info['typeDevice']
+        )
+    elif log_number == 2:
+        ua = request.POST.get('ua')
+        AVRLog2.objects.create(ua=ua)
+    elif log_number == 3:
+        v, t = request.POST.get('v'), request.POST.get('t')
+        info = t.split('\n')
+        info = [x for x in info if ':' in x]
+        info = {x.split(':')[0].strip(): x.split(':')[1].strip() for x in info}
+        info = {k: v for k, v in info.items() if k != 'Скачать'}
+        AVRLog3.objects.create(type=v, info=str(info))
     return HttpResponse('')
 
 
