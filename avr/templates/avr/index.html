@@ -283,7 +283,8 @@
 
             setEnteredInfo();
 
-            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' && enteredInfo.manufacturer !== '') {
+            if (enteredInfo.avrScheme !== '' && enteredInfo.powerUnit !== '' && enteredInfo.plcSupplyVoltage !== '' &&
+                enteredInfo.manufacturer !== '') {
                 if (enteredInfo.manufacturer !== "не важно") {
                     const saveInfo = saveEnteredInfo();
 
@@ -398,7 +399,7 @@
             return saveInfo === JSON.stringify(enteredInfo);
         }
 
-        function msieversion() {
+        function msie_version() {
             let isIE = false;
             const ua = window.navigator.userAgent;
             const old_ie = ua.indexOf('MSIE ');
@@ -416,11 +417,12 @@
             }
 
             if (isIE) {
-                alert("Internet Explorer не поддерживается! Используйте другой браузер (Google Chrome, Opera, Safari, Mozzila Firefox)");
+                alert("Internet Explorer не поддерживается! Используйте другой браузер " +
+                    "(Google Chrome, Opera, Safari, Mozilla Firefox)");
             }
         }
 
-        msieversion();
+        msie_version();
     });
 </script>
 </body>
