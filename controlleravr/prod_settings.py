@@ -8,7 +8,7 @@ STATIC_ROOT = BASE_DIR / 'static'
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', '164.92.218.30', 'controlleravr.ru']
 
 DATABASES = {
     'default': {
@@ -16,3 +16,5 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+CSRF_TRUSTED_ORIGINS = ['https://controlleravr.ru']
