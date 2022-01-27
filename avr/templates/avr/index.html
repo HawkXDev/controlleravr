@@ -12,131 +12,149 @@
     <link rel="stylesheet" type="text/css" href="{% static 'avr/avr.css' %}">
 </head>
 
-<body>
-<div class="container">
 
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <h4>Выбор контроллера АВР</h4>
+<body style="display: block;">
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="container">
+            <!-- Body -->
+            <div class="header-body">
+                <div class="row">
+                    <div class="col">
+                        <!-- Title -->
+                        <h3 class="header-title">
+                            Выбор контроллера АВР
+                        </h3>
+                    </div>
+                </div> <!-- / .row -->
+            </div> <!-- / .header-body -->
         </div>
-    </div>
+    </div> <!-- / .header -->
 
-    <div class="row row_margin">
-        <div class="col-12 col-lg-6">
-            <h5>1. Выбрать тип АВР</h5>
-        </div>
-    </div>
+    <div class="container">
 
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <label for="avr_scheme">Схема АВР</label>
-            <select id="avr_scheme" class="form-control border border-warning">
-                <option disabled selected>Выберите схему АВР</option>
-                <option>2.0</option>
-                <option>2.1</option>
-                <option>3.0</option>
-                <option>3.1</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <label for="power_unit">Силовая часть</label>
-            <select id="power_unit" class="form-control border border-warning">
-                <option value="" disabled selected>Выберите тип силовых аппаратов</option>
-                <option>автоматические выключатели</option>
-                <option>контакторы</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <label for="plc_supply_voltage">Напряжение питания ПЛК</label>
-
-            <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alert220V" hidden>
-                Для питающего напряжения отличного от 220 VAC АВР программируются по запросу
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <select id="plc_supply_voltage" class="form-control border border-success">
-                <option disabled selected>Выберите напряжение питания</option>
-                <option selected>220 VAC</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row row_margin">
-        <div class="col-12 col-lg-6">
-            <h5>2. Выбрать тип силовых аппаратов</h5>
-        </div>
-    </div>
-
-    <div class="row" id="alertViborDoctupen">
-        <div class="col-12 col-lg-6">
-            <div class="alert alert-primary" role="alert">
-                Выбор силовых аппаратов станет доступен после выбора типа АВР
+        <div class="row row_margin">
+            <div class="col-12 col-lg-6">
+                <h5>1. Выбрать тип АВР</h5>
             </div>
         </div>
-    </div>
 
-    <div class="row" id="alertViborProizvoditela" hidden>
-        <div class="col-12 col-lg-6">
-            <div class="alert alert-success" role="alert">
-                Выберите производителя и серию силовых аппаратов
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <label for="avr_scheme">Схема АВР</label>
+                <select id="avr_scheme" class="form-control border border-warning">
+                    <option disabled selected>Выберите схему АВР</option>
+                    <option>2.0</option>
+                    <option>2.1</option>
+                    <option>3.0</option>
+                    <option>3.1</option>
+                </select>
             </div>
         </div>
-    </div>
 
-    <div class="row" id="alertViborNaKontaktorah" hidden>
-        <div class="col-12 col-lg-6">
-            <div class="alert alert-success" role="alert">
-                Для схем на контакторах производитель и тип силовых аппаратов не важен. Нажмите кнопку Выбрать
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <label for="power_unit">Силовая часть</label>
+                <select id="power_unit" class="form-control border border-warning">
+                    <option value="" disabled selected>Выберите тип силовых аппаратов</option>
+                    <option>автоматические выключатели</option>
+                    <option>контакторы</option>
+                </select>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <label for="manufacturer">Производитель</label>
-            <div id="loading-manufacturer" class="spinner-border spinner-border-sm text-warning" role="status"
-                 hidden>
-                <span class="sr-only">Loading...</span>
-            </div>
-            <select id="manufacturer" class="form-control border" disabled>
-                <option disabled selected>Выберите производителя</option>
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <label for="plc_supply_voltage">Напряжение питания ПЛК</label>
 
-            </select>
-        </div>
-    </div>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" id="alert220V" hidden>
+                    Для питающего напряжения отличного от 220 VAC АВР программируются по запросу
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <label for="type_device">Серия</label>
-            <div id="loading-typedevice" class="spinner-border spinner-border-sm text-warning" role="status" hidden>
-                <span class="sr-only">Loading...</span>
-            </div>
-            <select id="type_device" class="form-control border" disabled>
-                <option disabled selected>Выберите серию</option>
-
-            </select>
-        </div>
-    </div>
-
-    <div class="row row_margin">
-        <div class="col-12 col-lg-6">
-            <a href="{% url 'index' %}" id="btn_choose"
-               class="btn btn-primary btn-lg disabled" tabindex="-1" role="button" aria-disabled="true">Выбрать</a>
-            <div id="loading-btnchoose" class="spinner-border spinner-border-sm text-warning" role="status" hidden>
-                <span class="sr-only">Loading...</span>
+                <select id="plc_supply_voltage" class="form-control border border-success">
+                    <option disabled selected>Выберите напряжение питания</option>
+                    <option selected>220 VAC</option>
+                </select>
             </div>
         </div>
+
+        <div class="row row_margin">
+            <div class="col-12 col-lg-6">
+                <h5>2. Выбрать тип силовых аппаратов</h5>
+            </div>
+        </div>
+
+        <div class="row" id="alertViborDoctupen">
+            <div class="col-12 col-lg-6">
+                <div class="alert alert-primary" role="alert">
+                    Выбор силовых аппаратов станет доступен после выбора типа АВР
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="alertViborProizvoditela" hidden>
+            <div class="col-12 col-lg-6">
+                <div class="alert alert-success" role="alert">
+                    Выберите производителя и серию силовых аппаратов
+                </div>
+            </div>
+        </div>
+
+        <div class="row" id="alertViborNaKontaktorah" hidden>
+            <div class="col-12 col-lg-6">
+                <div class="alert alert-success" role="alert">
+                    Для схем на контакторах производитель и тип силовых аппаратов не важен. Нажмите кнопку Выбрать
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <label for="manufacturer">Производитель</label>
+                <div id="loading-manufacturer" class="spinner-border spinner-border-sm text-warning" role="status"
+                     hidden>
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <select id="manufacturer" class="form-control border" disabled>
+                    <option disabled selected>Выберите производителя</option>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-lg-6">
+                <label for="type_device">Серия</label>
+                <div id="loading-typedevice" class="spinner-border spinner-border-sm text-warning" role="status" hidden>
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <select id="type_device" class="form-control border" disabled>
+                    <option disabled selected>Выберите серию</option>
+
+                </select>
+            </div>
+        </div>
+
+        <div class="row row_margin">
+            <div class="col-12 col-lg-6">
+                <a href="{% url 'index' %}" id="btn_choose"
+                   class="btn btn-primary btn-lg disabled" tabindex="-1" role="button" aria-disabled="true">Выбрать</a>
+                <div id="loading-btnchoose" class="spinner-border spinner-border-sm text-warning" role="status" hidden>
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-</div>
+</div><!-- / .main-content -->
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
@@ -163,6 +181,7 @@
             }
             return cookieValue;
         }
+
         const csrftoken = getCookie('csrftoken');
 
         let enteredInfo = {};

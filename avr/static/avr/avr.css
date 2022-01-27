@@ -27,3 +27,16 @@
 #div-buttons {
     margin-top: 20px;
 }
+
+
+
+body {
+    background-color: #f7f7f7;
+    color: #002a52;
+    font-family: sans-serif;
+}
+
+.header-body {
+    border-bottom: 1px solid #c5c5c5;
+    padding-top: 20px;
+}
