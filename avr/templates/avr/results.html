@@ -33,75 +33,99 @@
         </div>
     </div> <!-- / .header -->
 
-
     <div class="container">
 
-        <div class="variant" id="divVariant1">
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <h5><u>1 вариант</u>
-                        <span id="badge-dark" class="badge badge-dark" hidden>Снят с продажи, см. 2 вариант</span></h5>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <h6>Артикул: {{ article1.article }}</h6>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <h6>{{ article1.name }}</h6>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <p>Схема АВР: {{ article1.avr_scheme }}</p>
-                    <p id="powerUnit1">Силовая часть: {{ article1.power_devices_brand }}
-                        ({{ article1.power_devices_type }})</p>
-                    <p>Контроллер: {{ article1.plc }} (Easy500/700)</p>
-                    <p id="modulExt1">Модуль расширения: {{ article1.extension_module }}</p>
-                    <p id="download-docs-variant-1">Скачать:&nbsp;
-                        <a href="{{ article1.zip_link }}" id="aDocArt1" target="_blank">всю
-                            документацию</a>&nbsp;или&nbsp;
-                        <a href="{{ article1.xlsx_export_link }}" id="aSpecArt1" target="_blank">только спецификацию
-                            (xlsx)</a>
-                    </p>
-                </div>
-            </div>
-        </div>
+            <div class="card col-12 col-lg-6">
 
-        <div class="variant" id="divVariant2">
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <h5><u>2 вариант</u> <span class="badge badge-primary">New! easyE4</span></h5>
+                <div class="card-header">
+
+                    <!-- Title -->
+                    <h5 class="card-header-title">
+                        1 вариант
+                        <span id="badge-dark" class="badge badge-dark" hidden>Снят с продажи, см. 2 вариант</span>
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="variant" id="divVariant1">
+                        <div class="row">
+                            <div class="col-12">
+                                <h6>Артикул: {{ article1.article }}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <h6>{{ article1.name }}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p>Схема АВР: {{ article1.avr_scheme }}</p>
+                                <p id="powerUnit1">Силовая часть: {{ article1.power_devices_brand }}
+                                    ({{ article1.power_devices_type }})</p>
+                                <p>Контроллер: {{ article1.plc }} (Easy500/700)</p>
+                                <p id="modulExt1">Модуль расширения: {{ article1.extension_module }}</p>
+                                <p id="download-docs-variant-1">Скачать:&nbsp;
+                                    <a href="{{ article1.zip_link }}" id="aDocArt1" target="_blank">всю
+                                        документацию</a>&nbsp;или&nbsp;
+                                    <a href="{{ article1.xlsx_export_link }}" id="aSpecArt1" target="_blank">только
+                                        спецификацию
+                                        (xlsx)</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <h6>Артикул: {{ article2.article }}</h6>
+
+            <div class="card col-12 col-lg-6">
+
+                <div class="card-header">
+
+                    <!-- Title -->
+                    <h5 class="card-header-title">
+                        2 вариант
+                        <span class="badge badge-primary">New! easyE4</span>
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="variant" id="divVariant2">
+                        <div class="row">
+                            <div class="col-12 col-lg-6">
+                                <h6>Артикул: {{ article2.article }}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <h6>{{ article2.name }}</h6>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <p>Схема АВР: {{ article2.avr_scheme }}</p>
+                                <p id="powerUnit2">Силовая часть: {{ article2.power_devices_brand }}
+                                    ({{ article2.power_devices_type }})</p>
+                                <p>Контроллер: {{ article2.plc }} (easyE4)</p>
+                                <p id="modulExt2">Модуль расширения: {{ article2.extension_module }}</p>
+                                <p>Скачать:&nbsp;
+                                    <a href="{{ article2.zip_link }}" id="aDocArt2" target="_blank">всю
+                                        документацию</a>&nbsp;или&nbsp;
+                                    <a href="{{ article2.xlsx_export_link }}" id="aSpecArt2" target="_blank">только
+                                        спецификацию
+                                        (xlsx)</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <h6>{{ article2.name }}</h6>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-lg-6">
-                    <p>Схема АВР: {{ article2.avr_scheme }}</p>
-                    <p id="powerUnit2">Силовая часть: {{ article2.power_devices_brand }}
-                        ({{ article2.power_devices_type }})</p>
-                    <p>Контроллер: {{ article2.plc }} (easyE4)</p>
-                    <p id="modulExt2">Модуль расширения: {{ article2.extension_module }}</p>
-                    <p>Скачать:&nbsp;
-                        <a href="{{ article2.zip_link }}" id="aDocArt2" target="_blank">всю
-                            документацию</a>&nbsp;или&nbsp;
-                        <a href="{{ article2.xlsx_export_link }}" id="aSpecArt2" target="_blank">только спецификацию
-                            (xlsx)</a>
-                    </p>
-                </div>
-            </div>
-        </div>
 
     </div>
 </div>

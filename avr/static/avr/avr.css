@@ -20,8 +20,7 @@
 }
 
 .variant {
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 15px;
 }
 
 #div-buttons {
@@ -39,4 +38,40 @@ body {
 .header-body {
     border-bottom: 1px solid #c5c5c5;
     padding-top: 20px;
+    margin-bottom: 1rem;
+}
+
+
+.card {
+    border-color: #edf2f9;
+    box-shadow: 0 0.75rem 1.5rem rgb(18 38 63 / 3%);
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+    height: 60px;
+    background-color: transparent;
+    border-bottom: 1px solid #edf2f9;
+    margin-bottom: 0;
+    padding: 1rem 1.5rem;
+}
+
+.card-header>:first-child {
+    flex: 1;
+}
+
+.card-header-title {
+    margin-bottom: 0;
+}
+
+.row {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 0;
+    margin-left: calc(var(--bs-gutter-x)*-.5);
+    margin-right: calc(var(--bs-gutter-x)*-.5);
+    margin-top: calc(var(--bs-gutter-y)*-1);
 }
