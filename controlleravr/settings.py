@@ -14,6 +14,18 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Application definition
+
+INSTALLED_APPS = [
+    'avr',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles'
+]
+
 ROOT_URLCONF = 'controlleravr.urls'
 
 TEMPLATES = [
