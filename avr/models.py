@@ -2,6 +2,7 @@ from django.db import models
 
 
 class AVRIndex(models.Model):
+    """AVR Index"""
     avr_scheme = models.CharField(max_length=5)
     article = models.CharField(max_length=15)
     name = models.CharField(max_length=100)
@@ -22,12 +23,14 @@ class AVRIndex(models.Model):
 
 
 class AVRSpec(models.Model):
+    """AVR Spec"""
     specification = models.TextField()
     name = models.TextField()
     note = models.TextField()
 
 
 class AVRSpecData(models.Model):
+    """AVR Spec Data"""
     avr_spec = models.ForeignKey(AVRSpec, on_delete=models.CASCADE)
     number = models.IntegerField()
     item = models.TextField()
@@ -35,6 +38,7 @@ class AVRSpecData(models.Model):
 
 
 class AVRLog1(models.Model):
+    """AVR Log 1"""
     date = models.DateTimeField(auto_now_add=True)
     avr_scheme = models.CharField(max_length=5)
     power_part = models.CharField(max_length=30)
@@ -44,11 +48,13 @@ class AVRLog1(models.Model):
 
 
 class AVRLog2(models.Model):
+    """AVR Log 2"""
     date = models.DateTimeField(auto_now_add=True)
     ua = models.TextField()
 
 
 class AVRLog3(models.Model):
+    """AVR Log 3"""
     date = models.DateTimeField(auto_now_add=True)
     type = models.CharField(max_length=5)
     info = models.TextField()
